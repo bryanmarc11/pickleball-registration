@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pickleball Tournament Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6ef;
+    --card: #ffffff;
+    --ink: #14201a;
+    --muted: #5b6b62;
+    --line: #dde3d8;
+    --accent: #c8e639;      /* pickleball yellow-green */
+    --accent-ink: #1d2b10;
+    --brand: #0f5c3f;       /* court green */
+    --error: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.5;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
+
+  header {
+    background: var(--brand); color: #fff; border-radius: 16px;
+    padding: 28px 24px; position: relative; overflow: hidden;
+  }
+  header::after {
+    content: ""; position: absolute; right: -40px; top: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: var(--accent);
+    background-image: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18) 6px, transparent 7px),
+                      radial-gradient(circle at 65% 40%, rgba(0,0,0,.18) 6px, transparent 7px),
+                      radial-gradient(circle at 45% 70%, rgba(0,0,0,.18) 6px, transparent 7px);
+  }
+  header h1 {
+    font-family: 'Archivo Black', sans-serif; font-size: clamp(1.6rem, 5vw, 2.3rem);
+    line-height: 1.1; margin: 0 0 14px; max-width: 80%;
+  }
+  .meta { display: grid; gap: 4px; font-size: .95rem; position: relative; z-index: 1; }
+  .note { margin-top: 14px; font-size: .9rem; opacity: .9; }
+
+  section {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 22px 20px; margin-top: 18px;
+  }
+  section h2 {
+    font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; margin: 0 0 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section h2 .num {
+    background: var(--accent); color: var(--accent-ink); border-radius: 999px;
+    width: 28px; height: 28px; display: inline-grid; place-items: center; font-size: .85rem;
+  }
+  .field { margin-bottom: 16px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+
+  label.q { display: block; font-weight: 600; margin-bottom: 6px; font-size: .95rem; }
+  .req { color: var(--error); }
+  .help { color: var(--muted); font-size: .82rem; margin: -2px 0 6px; }
+  input[type=text], input[type=email], input[type=tel], input[type=date], input[type=number], textarea, select {
+    width: 100%; padding: 11px 12px; font: inherit; color: var(--ink);
+    border: 1.5px solid var(--line); border-radius: 10px; background: #fbfcf9;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--brand); background: #fff; }
+  textarea { min-height: 90px; resize: vertical; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  .choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .choice span {
+    display: inline-block; padding: 9px 14px; border: 1.5px solid var(--line);
+    border-radius: 999px; cursor: pointer; font-size: .92rem; background: #fbfcf9;
+    transition: .15s;
+  }
+  .choice input:checked + span { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .choice input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .waiver {
+    background: #f7f9f2; border-left: 4px solid var(--accent); padding: 12px 14px;
+    border-radius: 8px; font-size: .88rem; color: var(--muted); margin-bottom: 12px;
+  }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: .93rem; margin-bottom: 10px; }
+  .check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--brand); }
+
+  .error-msg { color: var(--error); font-size: .82rem; margin-top: 4px; display: none; }
+  .invalid input, .invalid select { border-color: var(--error); }
+  .invalid .error-msg { display: block; }
+
+  button[type=submit] {
+    margin-top: 22px; width: 100%; padding: 15px; border: 0; border-radius: 12px;
+    background: var(--accent); color: var(--accent-ink); font-family: 'Archivo Black', sans-serif;
+    font-size: 1.05rem; cursor: pointer; letter-spacing: .3px;
+  }
+  button[type=submit]:hover { filter: brightness(.95); }
+
+  #thanks { display: none; text-align: center; }
+  #thanks h2 { justify-content: center; }
+  #summary { text-align: left; font-size: .88rem; background: #f7f9f2; padding: 14px; border-radius: 10px; white-space: pre-wrap; }
+  footer { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <!-- EDIT THE TOURNAMENT DETAILS HERE -->
+    <h1>Pickleball Doubles Tournament</h1>
+    <div class="meta">
+      <div>📅 Saturday, November 28, 2026</div>
+      <div>📍 Venue name, Kalibo, Aklan</div>
+      <div>💰 ₱1,000 per team — payable on site</div>
+      <div>⏰ Register by November 20, 2026</div>
+    </div>
+    <div class="note">One form per team. Questions? Contact Paul Saladar at 09XX XXX XXXX.</div>
+  </header>
+
+  <!--
+    To collect responses, set action="" to your form endpoint
+    (e.g. Formspree, Getform, or a Google Apps Script web app URL).
+    If left blank, the page shows a summary the player can screenshot/send.
+  -->
+  <form id="regForm" action="/api/register" method="POST" novalidate>
+
+    <section>
+      <h2><span class="num">1</span> Team & Division</h2>
+
+      <div class="field">
+        <label class="q" for="team_name">Team name</label>
+        <p class="help">Optional — leave blank to use your surnames</p>
+        <input type="text" id="team_name" name="team_name">
+      </div>
+
+      <div class="field" data-required-group="division">
+        <label class="q">Division <span class="req">*</span></label>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="division" value="Men's Doubles"><span>Men's Doubles</span></label>
+          <label class="choice"><input type="radio" name="division" value="Women's Doubles"><span>Women's Doubles</span></label>
+          <label class="choice"><input type="radio" name="division" value="Mixed Doubles"><span>Mixed Doubles</span></label>
+        </div>
+        <div class="error-msg">Please choose a division.</div>
+      </div>
+
+      <div class="field" data-required-group="dupr_bracket">
+        <label class="q">DUPR bracket <span class="req">*</span></label>
+        <p class="help">Pick the bracket that matches your team rating. Organizers may reassign based on verified DUPR.</p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="dupr_bracket" value="Below 3.0"><span>Below 3.0</span></label>
+          <label class="choice"><input type="radio" name="dupr_bracket" value="3.0 – 3.49"><span>3.0 – 3.49</span></label>
+          <label class="choice"><input type="radio" name="dupr_bracket" value="3.5 – 3.99"><span>3.5 – 3.99</span></label>
+          <label class="choice"><input type="radio" name="dupr_bracket" value="4.0 and above"><span>4.0 and above</span></label>
+          <label class="choice"><input type="radio" name="dupr_bracket" value="No DUPR rating yet"><span>No DUPR yet</span></label>
+        </div>
+        <div class="error-msg">Please choose a bracket.</div>
+      </div>
+
+      <div class="field">
+        <label class="q" for="club">Club / Affiliation</label>
+        <input type="text" id="club" name="club">
+      </div>
+    </section>
+
+    <!-- Player sections are generated below by script to keep them identical -->
+    <div id="players"></div>
+
+    <section>
+      <h2><span class="num">4</span> Emergency Contact</h2>
+      <div class="row">
+        <div class="field">
+          <label class="q" for="ec_name">Contact name <span class="req">*</span></label>
+          <input type="text" id="ec_name" name="emergency_name" required>
+          <div class="error-msg">Required.</div>
+        </div>
+        <div class="field">
+          <label class="q" for="ec_phone">Contact number <span class="req">*</span></label>
+          <input type="tel" id="ec_phone" name="emergency_phone" required pattern="09\d{9}" placeholder="09171234567" inputmode="numeric">
+          <div class="error-msg">Enter an 11-digit number starting with 09.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="q" for="ec_rel">Relationship <span class="req">*</span></label>
+        <input type="text" id="ec_rel" name="emergency_relationship" required>
+        <div class="error-msg">Required.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="num">5</span> Payment & Waiver</h2>
+      <div class="field">
+        <label class="check"><input type="checkbox" name="payment_ack" value="yes" required>
+          <span>I understand the ₱1,000 team fee is payable on site before our first match. <span class="req">*</span></span></label>
+        <div class="error-msg">Please confirm.</div>
+      </div>
+      <div class="waiver">
+        Pickleball involves physical activity and risk of injury. By registering, both players confirm they are
+        physically fit to play, participate at their own risk, release the organizers from liability for injury or
+        loss, agree to follow tournament rules and officials' decisions, and consent to photos/videos taken during
+        the event being used for promotion.
+      </div>
+      <div class="field">
+        <label class="check"><input type="checkbox" name="waiver" value="agreed" required>
+          <span>Both players have read and agree to the waiver above. <span class="req">*</span></span></label>
+        <div class="error-msg">You must agree to register.</div>
+      </div>
+      <div class="field">
+        <label class="q" for="notes">Questions or special requests</label>
+        <textarea id="notes" name="notes"></textarea>
+      </div>
+    </section>
+
+    <p
+      id="submitStatus"
+      role="status"
+      aria-live="polite"
+      tabindex="-1"
+      style="display: none; color: var(--error);"
+    ></p>
+
+    <button type="submit">Register Team</button>
+  </form>
+
+  <section id="thanks">
+    <h2>🎉 You're registered!</h2>
+    <p>Your team is <strong>PENDING</strong> until the fee is paid on site. Brackets and schedule will be announced before the event.</p>
+    <div id="summary"></div>
+  </section>
+
+  <footer>Pickleball Doubles Tournament · Kalibo, Aklan</footer>
+</div>
+
+<script src="./registration.js" defer></script>
+
+</body>
+</html>

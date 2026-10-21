@@ -1,0 +1,17 @@
+{
+  "name": "pickleball-registration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Original pickleball registration frontend with Supabase and Vercel integration",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "npx vercel dev",
+    "check": "node --check api/register.js && node --check public/registration.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}
