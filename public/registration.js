@@ -371,6 +371,25 @@
     return valid;
   }
 
+function readApiError(result, fallback) {
+  const candidates = [
+    typeof result === "string" ? result : null,
+    result?.error,
+    result?.error?.message,
+    result?.error?.error,
+    result?.message
+  ];
+
+  const message = candidates.find(
+    (value) =>
+      typeof value === "string" &&
+      value.trim() &&
+      !value.includes("[object Object]")
+  );
+
+  return message ? message.trim() : fallback;
+}
+
   function setBusy(value) {
     busy = value;
     submitButton.disabled = value;
@@ -490,16 +509,40 @@
 
       const result = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        if ([400, 413, 415, 503].includes(response.status)) {
-          pendingRequest = null;
-        }
+if (!response.ok) {
+  const message = readApiError(
+    result,
+    `Registration was not confirmed. HTTP ${response.status}.`
+  );
 
-        throw new Error(
-          result?.error ||
-          `Registration was not confirmed (${response.status}).`
-        );
-      }
+  // Log diagnostic identifiers only—not the submitted form or file.
+  console.error("REGISTRATION_API_FAILED", {
+    httpStatus: response.status,
+
+    code:
+      typeof result?.code === "string"
+        ? result.code
+        : typeof result?.error?.code === "string"
+          ? result.error.code
+          : null,
+
+    reference:
+      typeof result?.reference === "string"
+        ? result.reference
+        : null
+  });
+
+  // With the previously supplied API, these responses happen
+  // before a registration is inserted.
+  if ([400, 413, 415, 503].includes(response.status)) {
+    pendingRequest = null;
+    unlockFormFields();
+  }
+
+  throw new Error(
+    `${message} (HTTP ${response.status})`
+  );
+}
 
       if (
         result?.ok !== true ||
