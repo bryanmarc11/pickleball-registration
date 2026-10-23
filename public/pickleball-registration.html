@@ -1,382 +1,1836 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pickleball Tournament Registration</title>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #f4f6ef;
-    --card: #ffffff;
-    --ink: #14201a;
-    --muted: #5b6b62;
-    --line: #dde3d8;
-    --accent: #c8e639;      /* pickleball yellow-green */
-    --accent-ink: #1d2b10;
-    --brand: #0f5c3f;       /* court green */
-    --error: #c0392b;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif; line-height: 1.5;
-  }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
+  <meta charset="UTF-8">
 
-  header {
-    background: var(--brand); color: #fff; border-radius: 16px;
-    padding: 28px 24px; position: relative; overflow: hidden;
-  }
-  header::after {
-    content: ""; position: absolute; right: -40px; top: -40px;
-    width: 160px; height: 160px; border-radius: 50%;
-    background: var(--accent);
-    background-image: radial-gradient(circle at 30% 30%, rgba(0,0,0,.18) 6px, transparent 7px),
-                      radial-gradient(circle at 65% 40%, rgba(0,0,0,.18) 6px, transparent 7px),
-                      radial-gradient(circle at 45% 70%, rgba(0,0,0,.18) 6px, transparent 7px);
-  }
-  header h1 {
-    font-family: 'Archivo Black', sans-serif; font-size: clamp(1.6rem, 5vw, 2.3rem);
-    line-height: 1.1; margin: 0 0 14px; max-width: 80%;
-  }
-  .meta { display: grid; gap: 4px; font-size: .95rem; position: relative; z-index: 1; }
-  .note { margin-top: 14px; font-size: .9rem; opacity: .9; }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  section {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    padding: 22px 20px; margin-top: 18px;
-  }
-  section h2 {
-    font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; margin: 0 0 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  section h2 .num {
-    background: var(--accent); color: var(--accent-ink); border-radius: 999px;
-    width: 28px; height: 28px; display: inline-grid; place-items: center; font-size: .85rem;
-  }
-  .field { margin-bottom: 16px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+  <title>Pickleball Tournament Registration</title>
 
-  label.q { display: block; font-weight: 600; margin-bottom: 6px; font-size: .95rem; }
-  .req { color: var(--error); }
-  .help { color: var(--muted); font-size: .82rem; margin: -2px 0 6px; }
-  input[type=text], input[type=email], input[type=tel], input[type=date], input[type=number], textarea, select {
-    width: 100%; padding: 11px 12px; font: inherit; color: var(--ink);
-    border: 1.5px solid var(--line); border-radius: 10px; background: #fbfcf9;
-  }
-  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--brand); background: #fff; }
-  textarea { min-height: 90px; resize: vertical; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
 
-  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
-  .choice input { position: absolute; opacity: 0; pointer-events: none; }
-  .choice span {
-    display: inline-block; padding: 9px 14px; border: 1.5px solid var(--line);
-    border-radius: 999px; cursor: pointer; font-size: .92rem; background: #fbfcf9;
-    transition: .15s;
-  }
-  .choice input:checked + span { background: var(--brand); color: #fff; border-color: var(--brand); }
-  .choice input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
-  .waiver {
-    background: #f7f9f2; border-left: 4px solid var(--accent); padding: 12px 14px;
-    border-radius: 8px; font-size: .88rem; color: var(--muted); margin-bottom: 12px;
-  }
-  .check { display: flex; gap: 10px; align-items: flex-start; font-size: .93rem; margin-bottom: 10px; }
-  .check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--brand); }
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
 
-  .error-msg { color: var(--error); font-size: .82rem; margin-top: 4px; display: none; }
-  .invalid input, .invalid select { border-color: var(--error); }
-  .invalid .error-msg { display: block; }
+  <style>
+    :root {
+      --bg: #f4f6ef;
+      --card: #ffffff;
+      --ink: #14201a;
+      --muted: #5b6b62;
+      --line: #dde3d8;
+      --accent: #c8e639;
+      --accent-ink: #1d2b10;
+      --brand: #0f5c3f;
+      --error: #c0392b;
+    }
 
-  button[type=submit] {
-    margin-top: 22px; width: 100%; padding: 15px; border: 0; border-radius: 12px;
-    background: var(--accent); color: var(--accent-ink); font-family: 'Archivo Black', sans-serif;
-    font-size: 1.05rem; cursor: pointer; letter-spacing: .3px;
-  }
-  button[type=submit]:hover { filter: brightness(.95); }
+    * {
+      box-sizing: border-box;
+    }
 
-  #thanks { display: none; text-align: center; }
-  #thanks h2 { justify-content: center; }
-  #summary { text-align: left; font-size: .88rem; background: #f7f9f2; padding: 14px; border-radius: 10px; white-space: pre-wrap; }
-  footer { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 28px; }
-</style>
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", system-ui, sans-serif;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 24px;
+      border-radius: 16px;
+      background: var(--brand);
+      color: #ffffff;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: var(--accent);
+
+      background-image:
+        radial-gradient(
+          circle at 30% 30%,
+          rgba(0, 0, 0, 0.18) 6px,
+          transparent 7px
+        ),
+        radial-gradient(
+          circle at 65% 40%,
+          rgba(0, 0, 0, 0.18) 6px,
+          transparent 7px
+        ),
+        radial-gradient(
+          circle at 45% 70%,
+          rgba(0, 0, 0, 0.18) 6px,
+          transparent 7px
+        );
+
+      pointer-events: none;
+    }
+
+    header h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 80%;
+      margin: 0 0 14px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2.3rem);
+      line-height: 1.1;
+    }
+
+    .meta {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 4px;
+      font-size: 0.95rem;
+    }
+
+    .note {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    section {
+      margin-top: 18px;
+      padding: 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+    }
+
+    section h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.1rem;
+    }
+
+    section h2 .num {
+      display: inline-grid;
+      flex-shrink: 0;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 0.85rem;
+    }
+
+    .field {
+      min-width: 0;
+      margin-bottom: 16px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .q {
+      display: block;
+      margin: 0 0 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .req {
+      color: var(--error);
+    }
+
+    .help {
+      margin: -2px 0 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      min-width: 0;
+      padding: 11px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcf9;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--brand);
+      background: #ffffff;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .choice {
+      position: relative;
+    }
+
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .choice span {
+      display: inline-block;
+      padding: 9px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      background: #fbfcf9;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .choice input:checked + span {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #ffffff;
+    }
+
+    .choice input:focus-visible + span {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
+
+    .choice input:disabled + span {
+      cursor: not-allowed;
+    }
+
+    .waiver {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: #f7f9f2;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.93rem;
+      cursor: pointer;
+    }
+
+    .check input {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      accent-color: var(--brand);
+    }
+
+    .error-msg {
+      display: none;
+      margin-top: 4px;
+      color: var(--error);
+      font-size: 0.82rem;
+    }
+
+    .invalid input,
+    .invalid select,
+    .invalid textarea,
+    .invalid .choice span,
+    .invalid .logo-upload {
+      border-color: var(--error);
+    }
+
+    .invalid .error-msg {
+      display: block;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover:not(:disabled) {
+      filter: brightness(0.95);
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .logo-upload {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 12px 16px;
+      border: 1.5px dashed var(--brand);
+      border-radius: 10px;
+      background: #f7f9f2;
+      color: var(--brand);
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .logo-upload:hover {
+      background: #eef4e4;
+    }
+
+    .logo-upload:focus-within {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
+
+    .logo-upload input[type="file"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    #logo-upload-text {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      pointer-events: none;
+    }
+
+    #logo-preview-container {
+      margin-top: 14px;
+    }
+
+    .logo-preview {
+      display: block;
+      width: min(100%, 280px);
+      height: auto;
+      max-height: 220px;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcf9;
+      object-fit: contain;
+    }
+
+    #submitStatus {
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border: 1px solid var(--error);
+      border-radius: 10px;
+      background: #fff5f3;
+      color: var(--error);
+      font-size: 0.9rem;
+      overflow-wrap: anywhere;
+    }
+
+    #submitStatus[data-state="pending"] {
+      border-color: var(--line);
+      background: #f7f9f2;
+      color: var(--ink);
+    }
+
+    #thanks {
+      text-align: center;
+    }
+
+    #thanks h2 {
+      justify-content: center;
+    }
+
+    #summary {
+      padding: 14px;
+      border-radius: 10px;
+      background: #f7f9f2;
+      font-size: 0.88rem;
+      text-align: left;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .noscript-message {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid var(--error);
+      border-radius: 10px;
+      background: #fff5f3;
+      color: var(--error);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      .row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap">
+  <main class="wrap">
+    <header>
+      <!-- Replace the venue and contact placeholders before launch. -->
 
-  <header>
-    <!-- EDIT THE TOURNAMENT DETAILS HERE -->
-    <h1>Pickleball Doubles Tournament</h1>
-    <div class="meta">
-      <div>📅 Saturday, November 28, 2026</div>
-      <div>📍 Venue name, Kalibo, Aklan</div>
-      <div>💰 ₱1,000 per team — payable on site</div>
-      <div>⏰ Register by November 20, 2026</div>
-    </div>
-    <div class="note">One form per team. Questions? Contact Paul Saladar at 09XX XXX XXXX.</div>
-  </header>
+      <h1>Pickleball Doubles Tournament</h1>
 
-  <!--
-    To collect responses, set action="" to your form endpoint
-    (e.g. Formspree, Getform, or a Google Apps Script web app URL).
-    If left blank, the page shows a summary the player can screenshot/send.
-  -->
-  <form id="regForm" action="/api/register" method="POST" novalidate>
-
-    <section>
-      <h2><span class="num">1</span> Team & Division</h2>
-
-      <div class="field">
-        <label class="q" for="team_name">Team name</label>
-        <p class="help">Optional — leave blank to use your surnames</p>
-        <input type="text" id="team_name" name="team_name">
+      <div class="meta">
+        <div>📅 Saturday, November 28, 2026</div>
+        <div>📍 Venue name, Kalibo, Aklan</div>
+        <div>💰 ₱1,000 per team — payable on site</div>
+        <div>⏰ Register by November 20, 2026</div>
       </div>
 
-      <div class="field" data-required-group="division">
-        <label class="q">Division <span class="req">*</span></label>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="division" value="Men's Doubles"><span>Men's Doubles</span></label>
-          <label class="choice"><input type="radio" name="division" value="Women's Doubles"><span>Women's Doubles</span></label>
-          <label class="choice"><input type="radio" name="division" value="Mixed Doubles"><span>Mixed Doubles</span></label>
-        </div>
-        <div class="error-msg">Please choose a division.</div>
+      <div class="note">
+        One form per team. Questions? Contact Paul Saladar
+        at 09XX XXX XXXX.
       </div>
+    </header>
 
-      <div class="field" data-required-group="dupr_bracket">
-        <label class="q">DUPR bracket <span class="req">*</span></label>
-        <p class="help">Pick the bracket that matches your team rating. Organizers may reassign based on verified DUPR.</p>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="dupr_bracket" value="Below 3.0"><span>Below 3.0</span></label>
-          <label class="choice"><input type="radio" name="dupr_bracket" value="3.0 – 3.49"><span>3.0 – 3.49</span></label>
-          <label class="choice"><input type="radio" name="dupr_bracket" value="3.5 – 3.99"><span>3.5 – 3.99</span></label>
-          <label class="choice"><input type="radio" name="dupr_bracket" value="4.0 and above"><span>4.0 and above</span></label>
-          <label class="choice"><input type="radio" name="dupr_bracket" value="No DUPR rating yet"><span>No DUPR yet</span></label>
-        </div>
-        <div class="error-msg">Please choose a bracket.</div>
+    <noscript>
+      <div class="noscript-message">
+        Enable JavaScript to display the player sections
+        and submit this registration.
       </div>
+    </noscript>
 
-      <div class="field">
-        <label class="q" for="club">Club / Affiliation</label>
-        <input type="text" id="club" name="club">
-      </div>
-    </section>
+    <form
+      id="regForm"
+      action="/api/register"
+      method="POST"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <section aria-labelledby="team-heading">
+        <h2 id="team-heading">
+          <span class="num">1</span>
+          Team &amp; Division
+        </h2>
 
-    <!-- Player sections are generated below by script to keep them identical -->
-    <div id="players"></div>
-
-    <section>
-      <h2><span class="num">4</span> Emergency Contact</h2>
-      <div class="row">
         <div class="field">
-          <label class="q" for="ec_name">Contact name <span class="req">*</span></label>
-          <input type="text" id="ec_name" name="emergency_name" required>
+          <label class="q" for="team_name">Team name</label>
+
+          <p class="help">Optional</p>
+
+          <input
+            type="text"
+            id="team_name"
+            name="team_name"
+            maxlength="120"
+          >
+        </div>
+
+        <div
+          class="field"
+          data-required-group="division"
+          role="group"
+          aria-labelledby="division-label"
+        >
+          <p class="q" id="division-label">
+            Division <span class="req">*</span>
+          </p>
+
+          <div class="choices">
+            <label class="choice">
+              <input
+                type="radio"
+                name="division"
+                value="Men's Doubles"
+              >
+              <span>Men's Doubles</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="division"
+                value="Women's Doubles"
+              >
+              <span>Women's Doubles</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="division"
+                value="Mixed Doubles"
+              >
+              <span>Mixed Doubles</span>
+            </label>
+          </div>
+
+          <div class="error-msg">Please choose a division.</div>
+        </div>
+
+        <div
+          class="field"
+          data-required-group="dupr_bracket"
+          role="group"
+          aria-labelledby="bracket-label"
+        >
+          <p class="q" id="bracket-label">
+            DUPR bracket <span class="req">*</span>
+          </p>
+
+          <p class="help">
+            Pick the bracket that matches your team rating.
+            Organizers may reassign based on verified DUPR.
+          </p>
+
+          <div class="choices">
+            <label class="choice">
+              <input
+                type="radio"
+                name="dupr_bracket"
+                value="Below 3.0"
+              >
+              <span>Below 3.0</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="dupr_bracket"
+                value="3.0 – 3.49"
+              >
+              <span>3.0 – 3.49</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="dupr_bracket"
+                value="3.5 – 3.99"
+              >
+              <span>3.5 – 3.99</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="dupr_bracket"
+                value="4.0 and above"
+              >
+              <span>4.0 and above</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="dupr_bracket"
+                value="No DUPR rating yet"
+              >
+              <span>No DUPR yet</span>
+            </label>
+          </div>
+
+          <div class="error-msg">Please choose a bracket.</div>
+        </div>
+
+        <div class="field">
+          <label class="q" for="club">Club / Affiliation</label>
+
+          <input
+            type="text"
+            id="club"
+            name="club"
+            maxlength="160"
+          >
+        </div>
+      </section>
+
+      <!-- Sections 2 and 3 are generated once by the script below. -->
+      <div id="players"></div>
+
+      <section aria-labelledby="emergency-heading">
+        <h2 id="emergency-heading">
+          <span class="num">4</span>
+          Emergency Contact
+        </h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="q" for="ec_name">
+              Contact name <span class="req">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="ec_name"
+              name="emergency_name"
+              maxlength="120"
+              required
+            >
+
+            <div class="error-msg">Required.</div>
+          </div>
+
+          <div class="field">
+            <label class="q" for="ec_phone">
+              Contact number <span class="req">*</span>
+            </label>
+
+            <input
+              type="tel"
+              id="ec_phone"
+              name="emergency_phone"
+              pattern="09[0-9]{9}"
+              maxlength="11"
+              placeholder="09171234567"
+              inputmode="numeric"
+              required
+            >
+
+            <div class="error-msg">
+              Enter an 11-digit number starting with 09.
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="q" for="ec_rel">
+            Relationship <span class="req">*</span>
+          </label>
+
+          <input
+            type="text"
+            id="ec_rel"
+            name="emergency_relationship"
+            maxlength="80"
+            required
+          >
+
           <div class="error-msg">Required.</div>
         </div>
+      </section>
+
+      <section aria-labelledby="payment-heading">
+        <h2 id="payment-heading">
+          <span class="num">5</span>
+          Payment &amp; Waiver
+        </h2>
+
         <div class="field">
-          <label class="q" for="ec_phone">Contact number <span class="req">*</span></label>
-          <input type="tel" id="ec_phone" name="emergency_phone" required pattern="09\d{9}" placeholder="09171234567" inputmode="numeric">
-          <div class="error-msg">Enter an 11-digit number starting with 09.</div>
+          <label class="check" for="payment_ack">
+            <input
+              type="checkbox"
+              id="payment_ack"
+              name="payment_ack"
+              value="yes"
+              required
+            >
+
+            <span>
+              I understand the ₱1,000 team fee is payable on site
+              before our first match.
+              <span class="req">*</span>
+            </span>
+          </label>
+
+          <div class="error-msg">Please confirm.</div>
         </div>
-      </div>
-      <div class="field">
-        <label class="q" for="ec_rel">Relationship <span class="req">*</span></label>
-        <input type="text" id="ec_rel" name="emergency_relationship" required>
-        <div class="error-msg">Required.</div>
-      </div>
-    </section>
 
-    <section>
-      <h2><span class="num">5</span> Payment & Waiver</h2>
-      <div class="field">
-        <label class="check"><input type="checkbox" name="payment_ack" value="yes" required>
-          <span>I understand the ₱1,000 team fee is payable on site before our first match. <span class="req">*</span></span></label>
-        <div class="error-msg">Please confirm.</div>
-      </div>
-      <div class="waiver">
-        Pickleball involves physical activity and risk of injury. By registering, both players confirm they are
-        physically fit to play, participate at their own risk, release the organizers from liability for injury or
-        loss, agree to follow tournament rules and officials' decisions, and consent to photos/videos taken during
-        the event being used for promotion.
-      </div>
-      <div class="field">
-        <label class="check"><input type="checkbox" name="waiver" value="agreed" required>
-          <span>Both players have read and agree to the waiver above. <span class="req">*</span></span></label>
-        <div class="error-msg">You must agree to register.</div>
-      </div>
-      <div class="field">
-        <label class="q" for="notes">Questions or special requests</label>
-        <textarea id="notes" name="notes"></textarea>
-      </div>
-    </section>
+        <div class="waiver" id="waiver-text">
+          Pickleball involves physical activity and risk of injury.
+          By registering, both players confirm they are physically
+          fit to play, participate at their own risk, release the
+          organizers from liability for injury or loss, agree to
+          follow tournament rules and officials' decisions, and
+          consent to photos/videos taken during the event being
+          used for promotion.
+        </div>
 
-<section id="business-section">
-  <h2>
-    <span class="num">6</span>
-    Business Partnership
-  </h2>
+        <div class="field">
+          <label class="check" for="waiver">
+            <input
+              type="checkbox"
+              id="waiver"
+              name="waiver"
+              value="agreed"
+              aria-describedby="waiver-text"
+              required
+            >
 
-  <div class="waiver">
-    <strong>Do you have a business?</strong><br>
-    Do you want us to promote it?<br>
-    Be our partner by sending us your logo!
-  </div>
+            <span>
+              Both players have read and agree to the waiver above.
+              <span class="req">*</span>
+            </span>
+          </label>
 
-  <div
-    class="field"
-    data-required-group="has_business"
-  >
-    <label class="q">
-      Do you have a business?
-      <span class="req">*</span>
-    </label>
+          <div class="error-msg">
+            You must agree to register.
+          </div>
+        </div>
 
-    <div class="choices">
-      <label class="choice">
-        <input
-          type="radio"
-          name="has_business"
-          value="yes"
-        >
-        <span>Yes</span>
-      </label>
+        <div class="field">
+          <label class="q" for="notes">
+            Questions or special requests
+          </label>
 
-      <label class="choice">
-        <input
-          type="radio"
-          name="has_business"
-          value="no"
-        >
-        <span>No</span>
-      </label>
-    </div>
+          <textarea
+            id="notes"
+            name="notes"
+            maxlength="2000"
+          ></textarea>
+        </div>
+      </section>
 
-    <div class="error-msg">
-      Please select Yes or No.
-    </div>
-  </div>
-
-  <div
-    id="promotion-question"
-    class="field"
-    data-required-group="wants_promotion"
-    hidden
-  >
-    <label class="q">
-      Do you want us to promote your business?
-      <span class="req">*</span>
-    </label>
-
-    <div class="choices">
-      <label class="choice">
-        <input
-          type="radio"
-          name="wants_promotion"
-          value="yes"
-          disabled
-        >
-        <span>Yes, promote it</span>
-      </label>
-
-      <label class="choice">
-        <input
-          type="radio"
-          name="wants_promotion"
-          value="no"
-          disabled
-        >
-        <span>No, thank you</span>
-      </label>
-    </div>
-
-    <div class="error-msg">
-      Please select Yes or No.
-    </div>
-  </div>
-
-  <div id="business-details" hidden>
-    <div class="field">
-      <label class="q" for="business_name">
-        Business name
-        <span class="req">*</span>
-      </label>
-
-      <input
-        type="text"
-        id="business_name"
-        name="business_name"
-        maxlength="160"
-        disabled
+      <section
+        id="business-section"
+        aria-labelledby="business-heading"
       >
+        <h2 id="business-heading">
+          <span class="num">6</span>
+          Business Partnership
+        </h2>
 
-      <div class="error-msg">
-        Please enter your business name.
-      </div>
-    </div>
+        <div class="waiver">
+          <strong>Do you have a business?</strong><br>
+          Do you want us to promote it?<br>
+          Be our partner by just sending us your logo!
+        </div>
 
-    <div class="field">
-      <label class="q" for="business_logo">
-        Upload your business logo
-        <span class="req">*</span>
-      </label>
+        <div
+          class="field"
+          data-required-group="has_business"
+          role="group"
+          aria-labelledby="business-question-label"
+        >
+          <p class="q" id="business-question-label">
+            Do you have a business?
+            <span class="req">*</span>
+          </p>
 
-      <p class="help">
-        Accepted formats: JPG, PNG, or WebP. Maximum size: 2 MB.
+          <div class="choices">
+            <label class="choice">
+              <input
+                type="radio"
+                name="has_business"
+                value="yes"
+                aria-controls="promotion-question"
+              >
+              <span>Yes</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="has_business"
+                value="no"
+                aria-controls="promotion-question"
+              >
+              <span>No</span>
+            </label>
+          </div>
+
+          <div class="error-msg">Please select Yes or No.</div>
+        </div>
+
+        <div
+          id="promotion-question"
+          class="field"
+          data-required-group="wants_promotion"
+          role="group"
+          aria-labelledby="promotion-label"
+          hidden
+        >
+          <p class="q" id="promotion-label">
+            Do you want us to promote your business?
+            <span class="req">*</span>
+          </p>
+
+          <div class="choices">
+            <label class="choice">
+              <input
+                type="radio"
+                name="wants_promotion"
+                value="yes"
+                aria-controls="business-details"
+                disabled
+              >
+              <span>Yes, promote it</span>
+            </label>
+
+            <label class="choice">
+              <input
+                type="radio"
+                name="wants_promotion"
+                value="no"
+                aria-controls="business-details"
+                disabled
+              >
+              <span>No, thank you</span>
+            </label>
+          </div>
+
+          <div class="error-msg">Please select Yes or No.</div>
+        </div>
+
+        <div id="business-details" hidden>
+          <div class="field">
+            <label class="q" for="business_name">
+              Business name <span class="req">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="business_name"
+              name="business_name"
+              maxlength="160"
+              disabled
+            >
+
+            <div class="error-msg">
+              Please enter your business name.
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="q" for="business_logo">
+              Upload your business logo
+              <span class="req">*</span>
+            </label>
+
+            <p class="help" id="logo-help">
+              Accepted formats: JPG, PNG, or WebP.
+              Maximum size: 2 MB.
+            </p>
+
+            <label class="logo-upload" for="business_logo">
+              <span id="logo-upload-text">
+                Choose business logo
+              </span>
+
+              <input
+                type="file"
+                id="business_logo"
+                name="business_logo"
+                accept="image/jpeg,image/png,image/webp"
+                aria-describedby="logo-help logo-error"
+                disabled
+              >
+            </label>
+
+            <div class="error-msg" id="logo-error">
+              Please choose a JPG, PNG, or WebP image
+              no larger than 2 MB.
+            </div>
+
+            <div id="logo-preview-container" hidden>
+              <p class="help">Logo preview</p>
+
+              <img
+                id="logo-preview"
+                class="logo-preview"
+                alt="Selected business logo preview"
+              >
+            </div>
+          </div>
+
+          <p class="help">
+            By requesting promotion, you confirm that you are
+            authorized to provide this logo for the tournament's
+            business promotions.
+          </p>
+        </div>
+      </section>
+
+      <p
+        id="submitStatus"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        tabindex="-1"
+        hidden
+      ></p>
+
+      <button id="submit-button" type="submit">
+        Register Team
+      </button>
+    </form>
+
+    <section
+      id="thanks"
+      aria-labelledby="thanks-heading"
+      tabindex="-1"
+      hidden
+    >
+      <h2 id="thanks-heading">🎉 You're registered!</h2>
+
+      <p id="payment-message">
+        Your team is PENDING until the fee is paid on site.
+        Brackets and schedule will be announced before the event.
       </p>
 
-      <label class="logo-upload" for="business_logo">
-        <span id="logo-upload-text">
-          Choose business logo
-        </span>
+      <div id="summary"></div>
+    </section>
 
-        <input
-          type="file"
-          id="business_logo"
-          name="business_logo"
-          accept="image/jpeg,image/png,image/webp"
-          disabled
-        >
-      </label>
+    <footer>
+      Pickleball Doubles Tournament · Kalibo, Aklan
+    </footer>
+  </main>
 
-      <div class="error-msg">
-        Please upload a valid JPG, PNG, or WebP image below 2 MB.
-      </div>
+  <!--
+    All frontend behavior is included here.
+    Do not also load registration.js.
+  -->
+  <script>
+    (() => {
+      "use strict";
 
-      <div id="logo-preview-container" hidden>
-        <p class="help">Logo preview</p>
+      const form = document.getElementById("regForm");
 
-        <img
-          id="logo-preview"
-          class="logo-preview"
-          alt="Selected business logo preview"
-        >
-      </div>
-    </div>
-  </div>
-</section>
-    
-    <p
-      id="submitStatus"
-      role="status"
-      aria-live="polite"
-      tabindex="-1"
-      style="display: none; color: var(--error);"
-    ></p>
+      // Prevent accidental repeated initialization.
+      if (form.dataset.initialized === "true") {
+        return;
+      }
 
-    <button type="submit">Register Team</button>
-  </form>
+      form.dataset.initialized = "true";
 
-  <section id="thanks">
-    <h2>🎉 You're registered!</h2>
-    <p>Your team is <strong>PENDING</strong> until the fee is paid on site. Brackets and schedule will be announced before the event.</p>
-    <div id="summary"></div>
-  </section>
+      const playersContainer = document.getElementById("players");
+      const status = document.getElementById("submitStatus");
+      const submitButton = document.getElementById("submit-button");
+      const thanks = document.getElementById("thanks");
+      const summary = document.getElementById("summary");
 
-  <footer>Pickleball Doubles Tournament · Kalibo, Aklan</footer>
-</div>
+      const players = [
+        {
+          key: "p1",
+          title: "Player 1 (Team Captain)",
+          num: 2,
+          emailRequired: true
+        },
+        {
+          key: "p2",
+          title: "Player 2 (Partner)",
+          num: 3,
+          emailRequired: false
+        }
+      ];
 
-<script src="./registration.js" defer></script>
+      const sizes = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
+      playersContainer.innerHTML = players.map((player) => `
+        <section aria-labelledby="${player.key}-heading">
+          <h2 id="${player.key}-heading">
+            <span class="num">${player.num}</span>
+            ${player.title}
+          </h2>
+
+          <div class="field">
+            <label class="q" for="${player.key}_name">
+              Full name <span class="req">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="${player.key}_name"
+              name="${player.key}_name"
+              maxlength="120"
+              autocomplete="section-${player.key} name"
+              required
+            >
+
+            <div class="error-msg">Full name is required.</div>
+          </div>
+
+          <div class="row">
+            <div
+              class="field"
+              data-required-group="${player.key}_gender"
+              role="group"
+              aria-labelledby="${player.key}-gender-label"
+            >
+              <p class="q" id="${player.key}-gender-label">
+                Gender <span class="req">*</span>
+              </p>
+
+              <div class="choices">
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="${player.key}_gender"
+                    value="Male"
+                  >
+                  <span>Male</span>
+                </label>
+
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="${player.key}_gender"
+                    value="Female"
+                  >
+                  <span>Female</span>
+                </label>
+              </div>
+
+              <div class="error-msg">Please choose one.</div>
+            </div>
+
+            <div class="field">
+              <label class="q" for="${player.key}_dob">
+                Date of birth <span class="req">*</span>
+              </label>
+
+              <input
+                type="date"
+                id="${player.key}_dob"
+                name="${player.key}_dob"
+                required
+              >
+
+              <div class="error-msg">
+                Enter a valid date of birth, not a future date.
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label class="q" for="${player.key}_phone">
+                Mobile number <span class="req">*</span>
+              </label>
+
+              <input
+                type="tel"
+                id="${player.key}_phone"
+                name="${player.key}_phone"
+                pattern="09[0-9]{9}"
+                maxlength="11"
+                placeholder="09171234567"
+                inputmode="numeric"
+                autocomplete="section-${player.key} tel"
+                required
+              >
+
+              <div class="error-msg">
+                Enter an 11-digit number starting with 09.
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="q" for="${player.key}_email">
+                Email
+                ${
+                  player.emailRequired
+                    ? '<span class="req">*</span>'
+                    : "(optional)"
+                }
+              </label>
+
+              <input
+                type="email"
+                id="${player.key}_email"
+                name="${player.key}_email"
+                maxlength="254"
+                autocomplete="section-${player.key} email"
+                ${player.emailRequired ? "required" : ""}
+              >
+
+              <div class="error-msg">Enter a valid email.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label class="q" for="${player.key}_dupr">
+                DUPR rating (doubles)
+              </label>
+
+              <p class="help">e.g. 3.452 — blank if none</p>
+
+              <input
+                type="number"
+                id="${player.key}_dupr"
+                name="${player.key}_dupr"
+                min="2"
+                max="8"
+                step="0.001"
+              >
+
+              <div class="error-msg">
+                Rating must be between 2.000 and 8.000,
+                with up to three decimal places.
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="q" for="${player.key}_duprid">
+                DUPR ID
+              </label>
+
+              <p class="help">From your DUPR app profile</p>
+
+              <input
+                type="text"
+                id="${player.key}_duprid"
+                name="${player.key}_dupr_id"
+                maxlength="80"
+              >
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="q" for="${player.key}_shirt">
+              Shirt size <span class="req">*</span>
+            </label>
+
+            <select
+              id="${player.key}_shirt"
+              name="${player.key}_shirt"
+              required
+            >
+              <option value="">Select size</option>
+              ${sizes.map((size) => `
+                <option value="${size}">${size}</option>
+              `).join("")}
+            </select>
+
+            <div class="error-msg">Please select a size.</div>
+          </div>
+        </section>
+      `).join("");
+
+      const promotionQuestion = document.getElementById(
+        "promotion-question"
+      );
+
+      const businessDetails = document.getElementById(
+        "business-details"
+      );
+
+      const businessName = document.getElementById("business_name");
+      const logoInput = document.getElementById("business_logo");
+      const logoText = document.getElementById("logo-upload-text");
+      const logoPreview = document.getElementById("logo-preview");
+      const logoPreviewContainer = document.getElementById(
+        "logo-preview-container"
+      );
+      const logoError = document.getElementById("logo-error");
+
+      const promotionControls = [
+        ...form.querySelectorAll('input[name="wants_promotion"]')
+      ];
+
+      const maxLogoBytes = 2 * 1024 * 1024;
+
+      const allowedLogoTypes = new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ]);
+
+      let previewUrl = null;
+      let busy = false;
+      let completed = false;
+      let pendingRequest = null;
+      let lockedControls = null;
+
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      const today = new Date(
+        Date.now() + 8 * 60 * 60 * 1000
+      ).toISOString().slice(0, 10);
+
+      document.getElementById("p1_dob").max = today;
+      document.getElementById("p2_dob").max = today;
+
+      function selectedValue(name) {
+        return form.querySelector(
+          `input[name="${name}"]:checked`
+        )?.value || "";
+      }
+
+      function showStatus(message, state = "error", focus = true) {
+        status.textContent = message;
+        status.dataset.state = state;
+        status.hidden = false;
+
+        if (focus) {
+          status.focus();
+        }
+      }
+
+      function clearStatus() {
+        status.textContent = "";
+        status.hidden = true;
+      }
+
+      function clearErrorsInside(container) {
+        container.classList.remove("invalid");
+
+        container.querySelectorAll(".invalid").forEach((field) => {
+          field.classList.remove("invalid");
+        });
+
+        container.querySelectorAll("input, select").forEach((control) => {
+          control.setCustomValidity("");
+          control.removeAttribute("aria-invalid");
+        });
+      }
+
+      function clearPreview() {
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          previewUrl = null;
+        }
+
+        logoPreview.removeAttribute("src");
+        logoPreviewContainer.hidden = true;
+      }
+
+      function resetLogo() {
+        clearPreview();
+        logoInput.value = "";
+        logoInput.setCustomValidity("");
+        logoInput.removeAttribute("aria-invalid");
+        logoInput.closest(".field").classList.remove("invalid");
+
+        logoText.textContent = "Choose business logo";
+
+        logoError.textContent =
+          "Please choose a JPG, PNG, or WebP image no larger than 2 MB.";
+      }
+
+      function updateBusinessFields() {
+        if (pendingRequest || busy || completed) {
+          return;
+        }
+
+        const hasBusiness = selectedValue("has_business") === "yes";
+
+        promotionQuestion.hidden = !hasBusiness;
+
+        for (const control of promotionControls) {
+          control.disabled = !hasBusiness;
+
+          if (!hasBusiness) {
+            control.checked = false;
+          }
+        }
+
+        if (!hasBusiness) {
+          clearErrorsInside(promotionQuestion);
+        }
+
+        const wantsPromotion =
+          hasBusiness && selectedValue("wants_promotion") === "yes";
+
+        businessDetails.hidden = !wantsPromotion;
+
+        businessName.disabled = !wantsPromotion;
+        businessName.required = wantsPromotion;
+
+        logoInput.disabled = !wantsPromotion;
+        logoInput.required = wantsPromotion;
+
+        if (!wantsPromotion) {
+          businessName.value = "";
+          resetLogo();
+          clearErrorsInside(businessDetails);
+        }
+      }
+
+      function logoValidationMessage() {
+        const file = logoInput.files?.[0];
+
+        if (!file) {
+          return logoInput.required
+            ? "Please choose your business logo."
+            : "";
+        }
+
+        if (!allowedLogoTypes.has(file.type)) {
+          return "Use a JPG, PNG, or WebP image.";
+        }
+
+        if (file.size < 1 || file.size > maxLogoBytes) {
+          return "Choose a nonempty image no larger than 2 MB.";
+        }
+
+        return "";
+      }
+
+      function updateLogoPreview() {
+        clearPreview();
+
+        const file = logoInput.files?.[0];
+        const message = logoValidationMessage();
+
+        logoInput.setCustomValidity(message);
+
+        const field = logoInput.closest(".field");
+        field.classList.toggle("invalid", Boolean(message));
+
+        if (message) {
+          logoInput.setAttribute("aria-invalid", "true");
+          logoError.textContent = message;
+          logoText.textContent = "Choose another business logo";
+          return;
+        }
+
+        logoInput.removeAttribute("aria-invalid");
+
+        if (!file) {
+          logoText.textContent = "Choose business logo";
+          return;
+        }
+
+        logoText.textContent = file.name;
+
+        previewUrl = URL.createObjectURL(file);
+        logoPreview.src = previewUrl;
+        logoPreviewContainer.hidden = false;
+      }
+
+      // A failed preview does not prove the file is safe or unsafe.
+      // The backend must independently validate every uploaded image.
+      logoPreview.addEventListener("error", () => {
+        logoPreviewContainer.hidden = true;
+      });
+
+      function markInvalid(control, invalid) {
+        control.closest(".field")?.classList.toggle("invalid", invalid);
+
+        if (invalid) {
+          control.setAttribute("aria-invalid", "true");
+        } else {
+          control.removeAttribute("aria-invalid");
+        }
+      }
+
+      function validateForm() {
+        let valid = true;
+
+        form.querySelectorAll(".invalid").forEach((field) => {
+          field.classList.remove("invalid");
+        });
+
+        const controls = form.querySelectorAll(
+          "input:not(:disabled), select:not(:disabled), textarea:not(:disabled)"
+        );
+
+        controls.forEach((control) => {
+          control.removeAttribute("aria-invalid");
+
+          if (control.type === "radio") {
+            return;
+          }
+
+          control.setCustomValidity("");
+
+          if (
+            control.required &&
+            control.type === "text" &&
+            !control.value.trim()
+          ) {
+            control.setCustomValidity("This field is required.");
+          }
+
+          if (
+            control.type === "number" &&
+            control.value &&
+            !/^\d+(?:\.\d{1,3})?$/.test(control.value)
+          ) {
+            control.setCustomValidity(
+              "Use a number with up to three decimal places."
+            );
+          }
+
+          if (control === logoInput) {
+            const message = logoValidationMessage();
+            control.setCustomValidity(message);
+
+            if (message) {
+              logoError.textContent = message;
+            }
+          }
+
+          const invalid = !control.checkValidity();
+
+          markInvalid(control, invalid);
+
+          if (invalid) {
+            valid = false;
+          }
+        });
+
+        form.querySelectorAll("[data-required-group]").forEach((field) => {
+          const choices = [
+            ...field.querySelectorAll('input[type="radio"]:not(:disabled)')
+          ];
+
+          if (field.closest("[hidden]") || choices.length === 0) {
+            field.classList.remove("invalid");
+            field.removeAttribute("aria-invalid");
+            return;
+          }
+
+          const invalid = !choices.some((control) => control.checked);
+
+          field.classList.toggle("invalid", invalid);
+
+          if (invalid) {
+            field.setAttribute("aria-invalid", "true");
+            valid = false;
+          } else {
+            field.removeAttribute("aria-invalid");
+          }
+        });
+
+        const division = selectedValue("division");
+        const gender1 = selectedValue("p1_gender");
+        const gender2 = selectedValue("p2_gender");
+
+        if (division && gender1 && gender2) {
+          const mismatch =
+            (division === "Mixed Doubles" && gender1 === gender2) ||
+            (
+              division === "Men's Doubles" &&
+              (gender1 !== "Male" || gender2 !== "Male")
+            ) ||
+            (
+              division === "Women's Doubles" &&
+              (gender1 !== "Female" || gender2 !== "Female")
+            );
+
+          if (mismatch) {
+            valid = false;
+
+            showStatus(
+              "Player genders do not match the selected division."
+            );
+          }
+        }
+
+        if (!valid) {
+          const firstField = form.querySelector(".invalid");
+
+          if (firstField) {
+            firstField.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "center"
+            });
+
+            firstField.querySelector(
+              "input:not(:disabled), select:not(:disabled), textarea:not(:disabled)"
+            )?.focus();
+          }
+        }
+
+        return valid;
+      }
+
+      function lockFormFields() {
+        if (lockedControls) {
+          return;
+        }
+
+        lockedControls = new Map();
+
+        form.querySelectorAll("input, select, textarea").forEach((control) => {
+          lockedControls.set(control, control.disabled);
+          control.disabled = true;
+        });
+      }
+
+      function unlockFormFields() {
+        if (!lockedControls) {
+          return;
+        }
+
+        for (const [control, wasDisabled] of lockedControls) {
+          control.disabled = wasDisabled;
+        }
+
+        lockedControls = null;
+      }
+
+      function showSuccess(result, fields, logo) {
+        const lines = [
+          `Registration reference: ${result.registrationId}`,
+          `Payment status: ${result.paymentStatus.toUpperCase()}`,
+          `Fee due: ₱${result.feeDuePhp.toLocaleString("en-PH")}`,
+          "",
+          `Team name: ${fields.team_name || "Not provided"}`,
+          `Division: ${fields.division}`,
+          `DUPR bracket: ${fields.dupr_bracket}`,
+          `Club / affiliation: ${fields.club || "Not provided"}`,
+          "",
+          `Team captain: ${fields.p1_name}`,
+          `Partner: ${fields.p2_name}`,
+          "",
+          `Business owner: ${fields.has_business === "yes" ? "Yes" : "No"}`,
+          `Business promotion: ${fields.wants_promotion === "yes" ? "Requested" : "Not requested"}`
+        ];
+
+        if (fields.wants_promotion === "yes") {
+          lines.push(
+            `Business name: ${fields.business_name}`,
+            `Logo: ${logo?.name || "Uploaded"}`,
+            "Logo storage: confirmed by the server"
+          );
+        }
+
+        if (result.email) {
+          lines.push("");
+
+          if (result.email.status === "accepted") {
+            lines.push(
+              "A confirmation copy was accepted for email delivery.",
+              "Please check your inbox and spam folder."
+            );
+          } else if (result.email.status === "partial") {
+            lines.push(
+              "Registration is saved, but not all email copies were accepted.",
+              "Contact the organizer if you need a copy. Do not register again."
+            );
+          } else {
+            lines.push(
+              "Registration is saved, but the email copy was not confirmed.",
+              "Keep your reference and contact the organizer."
+            );
+          }
+        }
+
+        lines.push(
+          "",
+          "Keep this reference for event check-in.",
+          "This confirms registration, not payment."
+        );
+
+        summary.textContent = lines.join("\n");
+
+        document.getElementById("payment-message").textContent =
+          result.paymentStatus === "unpaid"
+            ? (
+              "Your team is PENDING until the fee is paid on site. " +
+              "Brackets and schedule will be announced before the event."
+            )
+            : (
+              `Payment status: ${result.paymentStatus.toUpperCase()}. ` +
+              "Contact the organizer for the final brackets and schedule."
+            );
+
+        clearStatus();
+        form.hidden = true;
+        thanks.hidden = false;
+        thanks.focus();
+
+        thanks.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start"
+        });
+      }
+
+      form.addEventListener("input", (event) => {
+        const control = event.target;
+
+        if (
+          control instanceof HTMLInputElement ||
+          control instanceof HTMLSelectElement ||
+          control instanceof HTMLTextAreaElement
+        ) {
+          if (control.type !== "file") {
+            control.setCustomValidity("");
+          }
+
+          control.removeAttribute("aria-invalid");
+          control.closest(".field")?.classList.remove("invalid");
+        }
+      });
+
+      form.addEventListener("change", (event) => {
+        const control = event.target;
+
+        control.closest?.(".field")?.classList.remove("invalid");
+
+        if (
+          control.name === "has_business" ||
+          control.name === "wants_promotion"
+        ) {
+          updateBusinessFields();
+        }
+
+        if (control === logoInput) {
+          updateLogoPreview();
+        }
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (busy || completed) {
+          return;
+        }
+
+        clearStatus();
+
+        if (!pendingRequest) {
+          if (!validateForm()) {
+            return;
+          }
+
+          if (!window.crypto?.randomUUID) {
+            showStatus(
+              "Open this form using HTTPS or a localhost development server."
+            );
+            return;
+          }
+
+          const fields = {};
+
+          for (const [name, value] of new FormData(form).entries()) {
+            // The file is sent separately, not serialized inside JSON.
+            if (typeof value === "string") {
+              fields[name] = value.trim();
+            }
+          }
+
+          if (fields.has_business === "no") {
+            fields.wants_promotion = "no";
+            fields.business_name = "";
+          } else if (fields.wants_promotion !== "yes") {
+            fields.business_name = "";
+          }
+
+          pendingRequest = {
+            submissionId: window.crypto.randomUUID(),
+            fields,
+            businessLogo:
+              fields.wants_promotion === "yes"
+                ? logoInput.files?.[0] || null
+                : null
+          };
+
+          // Preserve the exact submission during uncertain retries.
+          lockFormFields();
+        }
+
+        const request = pendingRequest;
+
+        busy = true;
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving registration…";
+        form.setAttribute("aria-busy", "true");
+
+        showStatus(
+          "Saving your registration. Please keep this page open.",
+          "pending",
+          false
+        );
+
+        const controller = new AbortController();
+
+        const timeout = window.setTimeout(() => {
+          controller.abort();
+        }, 30000);
+
+        try {
+          const multipart = new FormData();
+
+          multipart.append(
+            "payload",
+            JSON.stringify({
+              submissionId: request.submissionId,
+              fields: request.fields
+            })
+          );
+
+          if (request.businessLogo) {
+            multipart.append(
+              "business_logo",
+              request.businessLogo,
+              request.businessLogo.name
+            );
+          }
+
+          const response = await fetch(form.action, {
+            method: "POST",
+            headers: {
+              Accept: "application/json"
+            },
+            signal: controller.signal,
+            body: multipart
+          });
+
+          const result = await response.json().catch(() => null);
+
+          if (!response.ok) {
+            // These responses from the matching API occur before insertion.
+            if ([400, 413, 415, 503].includes(response.status)) {
+              pendingRequest = null;
+              unlockFormFields();
+            }
+
+            throw new Error(
+              result?.error ||
+              `Registration was not confirmed (${response.status}).`
+            );
+          }
+
+          const validResponse =
+            result?.ok === true &&
+            result.registrationId === request.submissionId &&
+            Number.isInteger(result.feeDuePhp) &&
+            result.feeDuePhp >= 0 &&
+            ["unpaid", "paid", "refunded"].includes(result.paymentStatus);
+
+          if (!validResponse) {
+            throw new Error(
+              "The server response was incomplete. Retry on this page without refreshing."
+            );
+          }
+
+          if (
+            request.businessLogo &&
+            result.businessLogoUploaded !== true
+          ) {
+            throw new Error(
+              "The server did not confirm logo storage. Keep this page open and contact the organizer."
+            );
+          }
+
+          completed = true;
+
+          showSuccess(
+            result,
+            request.fields,
+            request.businessLogo
+          );
+        } catch (error) {
+          let message;
+
+          if (error.name === "AbortError") {
+            message =
+              "The request timed out and may already have been saved. " +
+              "Click Retry registration on this page to resend the same " +
+              "submission. Do not refresh.";
+          } else if (error instanceof TypeError) {
+            message =
+              "Could not connect to the server. Click Retry registration " +
+              "on this page to resend the same submission. Do not refresh.";
+          } else {
+            message = error.message || "Registration was not confirmed.";
+          }
+
+          if (pendingRequest) {
+            message +=
+              ` Your submission reference is ${pendingRequest.submissionId}. ` +
+              "Fields remain locked to prevent an accidental second entry.";
+          }
+
+          showStatus(message);
+        } finally {
+          window.clearTimeout(timeout);
+
+          busy = false;
+          form.removeAttribute("aria-busy");
+
+          submitButton.disabled = completed;
+          submitButton.textContent = pendingRequest && !completed
+            ? "Retry registration"
+            : "Register Team";
+        }
+      });
+
+      window.addEventListener("pagehide", () => {
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          previewUrl = null;
+        }
+      });
+
+      updateBusinessFields();
+    })();
+  </script>
 </body>
 </html>
