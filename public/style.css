@@ -537,3 +537,46 @@ select:focus {
     scroll-behavior: auto !important;
   }
 }
+[hidden] { display: none !important; }
+
+.upload-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 12px;
+  border: 1.5px dashed var(--brand);
+  border-radius: 10px;
+  background: #fbfcf9;
+  color: var(--brand);
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s;
+  text-align: center;
+}
+
+.upload-box:hover {
+  background: #fff;
+  border-color: var(--accent-ink);
+}
+
+.logo-preview {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  max-height: 180px;
+  object-fit: contain;
+  background: #fbfcf9;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+#logo_preview_wrap {
+  margin-top: 10px;
+}
+
+.invalid .upload-box {
+  border-color: var(--error);
+}
