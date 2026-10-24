@@ -810,7 +810,9 @@ stage = "validate_fields";
 
     console.error("REGISTRATION_FAILED", {
       reference,
-      code: error?.code || "SERVER_ERROR",
+      stage,
+      code: String(error?.code || "SERVER_ERROR"),
+
       configuration:
         error?.code === "CONFIG_ERROR"
           ? error.message
