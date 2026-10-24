@@ -655,6 +655,8 @@ export default async function handler(req, res) {
   const temporaryPaths = new Set();
 
   let candidatePath = null;
+  let stage = "parse_multipart";
+
 
   try {
     const { body, uploadedFile } = await parseMultipartRequest(
@@ -675,16 +677,24 @@ export default async function handler(req, res) {
       );
     }
 
+stage = "validate_fields";
+
     const fields = validateFields(body.fields);
+
+    stage = "validate_logo";
 
     const logo = await validateLogo(
       uploadedFile,
       fields.wants_promotion === "yes"
     );
 
+    stage = "create_database_client";
+
     const database = getDatabase();
 
     // Check retries before writing anything to Storage.
+    stage = "find_existing_registration";
+
     const existing = await findRegistration(
       database,
       body.submissionId
@@ -705,6 +715,8 @@ export default async function handler(req, res) {
       // Unique per request: never overwrite another request's object.
       candidatePath =
         `${body.submissionId}/${randomUUID()}.${logo.extension}`;
+
+      stage = "upload_logo";
 
       const { error: uploadError } = await database.storage
         .from(LOGO_BUCKET)
@@ -740,6 +752,8 @@ export default async function handler(req, res) {
       logo_sha256: logo?.sha256 || null
     };
 
+    stage = "insert_registration";
+
     const { error: insertError } = await database
       .from(TABLE)
       .insert(row);
@@ -747,6 +761,8 @@ export default async function handler(req, res) {
     if (insertError) {
       // Another concurrent request may have inserted this ID.
       // Also resolve uncertain insert responses by checking the row.
+      stage = "resolve_insert_error";
+
       const saved = await findRegistration(
         database,
         body.submissionId
