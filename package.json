@@ -12,6 +12,8 @@
     "check": "node --check api/register.js && node --check public/registration.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.118.0",
+    "file-type": "^21.3.4",
+    "formidable": "^3.5.4"
   }
 }

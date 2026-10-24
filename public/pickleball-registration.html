@@ -1745,15 +1745,46 @@
           const result = await response.json().catch(() => null);
 
           if (!response.ok) {
-            // These responses from the matching API occur before insertion.
+            const candidates = [
+              typeof result === "string" ? result : null,
+              result?.error,
+              result?.error?.message,
+              result?.error?.error,
+              result?.message
+            ];
+
+            const extractedMessage = candidates.find(
+              (value) =>
+                typeof value === "string" &&
+                value.trim() &&
+                !value.includes("[object Object]")
+            );
+
+            const message = extractedMessage
+              ? extractedMessage.trim()
+              : "The server returned an error without a readable message.";
+
+            const code =
+              typeof result?.error?.code === "string"
+                ? result.error.code
+                : typeof result?.code === "string"
+                  ? result.code
+                  : null;
+
+            // Log identifiers only, not submitted personal information.
+            console.error("REGISTRATION_API_FAILED", {
+              httpStatus: response.status,
+              code
+            });
+
+            // With the supplied API, these responses precede database insertion.
             if ([400, 413, 415, 503].includes(response.status)) {
               pendingRequest = null;
               unlockFormFields();
             }
 
             throw new Error(
-              result?.error ||
-              `Registration was not confirmed (${response.status}).`
+              `${message} [HTTP ${response.status}${code ? `; code ${code}` : ""}]`
             );
           }
 
